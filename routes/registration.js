@@ -83,6 +83,26 @@ router.post("/register", (req, res) => {
   }
 });
 
+router.post("/resendVerificationEmail", (req, res) => {
+  const { email } = req.body;
+  sendVerificationEmail(email, (mailError) => {
+    if (mailError) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send verification email.",
+      });
+    }
+
+    console.log("Verification email sent successfully.");
+
+    // Send a true value for success to the frontend.
+    return res.status(201).json({
+      success: true,
+      message: "User registered successfully.",
+    });
+  });
+});
+
 router.get("/verify", (req, res) => {
   const { email } = req.query;
   const loginLink = "http://localhost:3000/login";
